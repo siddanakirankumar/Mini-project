@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_FLIGHTS 10
+#define MAX_SEATS 5
+struct Flight {
+    int flightNumber;
+    char destination[50];
+    int seatsAvailable;
+    int bookedSeats;
+};
+
+void displayFlights(struct Flight flights[], int flightCount) {
+    printf("\nAvailable Flights:\n");
+    printf("Flight No | Destination | Seats Available\n");
+    for (int i = 0; i < flightCount; i++) {
+        printf("%d        | %s        | %d\n", flights[i].flightNumber, flights[i].destination, flights[i].seatsAvailable - flights[i].bookedSeats);
+    }
+}
+
+void bookSeat(struct Flight flights[], int flightCount, int flightNo) {
+    int found = 0;
+    for (int i = 0; i < flightCount; i++) {
+        if (flights[i].flightNumber == flightNo) {
+            found = 1;
+            if (flights[i].bookedSeats < flights[i].seatsAvailable) {
+                flights[i].bookedSeats++;
+                printf("\nSeat successfully booked on flight %d to %s.\n", flights[i].flightNumber, flights[i].destination);
+            } else {
+                printf("\nSorry, no seats available on this flight.\n");
+            }
+            break;
+        }
+    }
+    if (!found) {
+        printf("\nInvalid flight number.\n");
+    }
+}
+
+int main() {
+    struct Flight flights[MAX_FLIGHTS];
+    int flightCount = 0;
+    int choice, flightNo;
+    flights[0] = (struct Flight){101, "New York", 5, 0};
+    flights[1] = (struct Flight){102, "Los Angeles", 5, 0};
+    flights[2] = (struct Flight){103, "London", 5, 0};
+    flightCount = 3;
+
+    while (1) {
+        printf("\n===== Airline Reservation System =====\n");
+        printf("1. View Available Flights\n");
+        printf("2. Book a Seat\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                displayFlights(flights, flightCount);
+                break;
+            case 2:
+                printf("\nEnter flight number to book: ");
+                scanf("%d", &flightNo);
+                bookSeat(flights, flightCount, flightNo);
+                break;
+            case 3:
+                printf("\nExiting the system...\n");
+                exit(0);
+                break;
+            default:
+                printf("\nInvalid choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}
